@@ -8,7 +8,11 @@
  * See CONTRIBUTORS.txt for the list of the project authors
  */
 
+#if os(Linux)
 import CJavaScriptCore
+#else
+import JavaScriptCore
+#endif
 
 public struct JSError: Error, CustomStringConvertible {
     public var description: String
