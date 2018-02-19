@@ -15,8 +15,8 @@ let package = Package(
     name: "JavaScript",
     products: [
         .library(
-            name: "JavaScriptCore",
-            targets: ["JavaScriptCore"])
+            name: "JavaScript",
+            targets: ["JavaScript"])
     ],
     dependencies: [
         .package(
@@ -28,10 +28,10 @@ let package = Package(
             name: "CJavaScriptCore",
             dependencies: []),
         .target(
-            name: "JavaScriptCore",
+            name: "JavaScript",
             dependencies: ["CJavaScriptCore"]),
         .testTarget(
-            name: "JavaScriptCoreTests",
-            dependencies: ["Test", "JavaScriptCore"])
+            name: "JavaScriptTests",
+            dependencies: ["Test", "JavaScript"])
     ]
 )

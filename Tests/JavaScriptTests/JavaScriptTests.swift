@@ -9,7 +9,7 @@
  */
 
 import Test
-@testable import JavaScriptCore
+@testable import JavaScript
 
 final class JavaScriptCoreTests: TestCase {
     func testEvaluate() {
