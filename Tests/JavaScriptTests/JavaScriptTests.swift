@@ -41,14 +41,10 @@ final class JavaScriptCoreTests: TestCase {
         do {
             let context = JSContext()
 
-
-            var captured = false
             try context.createFunction(name: "testUndefined") {
-                captured = true
                 return .undefined
             }
             let undefinedResult = try context.evaluate("testUndefined()")
-            assertTrue(captured)
             assertTrue(undefinedResult.isUndefined)
             assertFalse(undefinedResult.isNull)
             assertFalse(undefinedResult.isBool)
@@ -101,6 +97,39 @@ final class JavaScriptCoreTests: TestCase {
             assertFalse(stringResult.isNumber)
             assertTrue(stringResult.isString)
             assertEqual(try stringResult.toString(), "success")
+        } catch {
+            fail(String(describing: error))
+        }
+    }
+
+    func testCapture() {
+        do {
+            let context = JSContext()
+
+            var captured = false
+            try context.createFunction(name: "testCapture")
+            { (_) -> ReturnValue in
+                captured = true
+                return .string("captured")
+            }
+            let result = try context.evaluate("testCapture()")
+            assertTrue(captured)
+            assertEqual("\(result)", "captured")
+        } catch {
+            fail(String(describing: error))
+        }
+    }
+
+    func testArguments() {
+        do {
+            let context = JSContext()
+
+            var result = [String]()
+            try context.createFunction(name: "testArguments") { arguments in
+                result = try arguments.map(String.init)
+            }
+            try context.evaluate("testArguments('one', 'two')")
+            assertEqual(result, ["one", "two"])
         } catch {
             fail(String(describing: error))
         }

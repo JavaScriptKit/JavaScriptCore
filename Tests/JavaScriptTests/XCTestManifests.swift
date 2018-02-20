@@ -9,6 +9,8 @@ extension JSValueTests {
 
 extension JavaScriptCoreTests {
     static let __allTests = [
+        ("testArguments", testArguments),
+        ("testCapture", testCapture),
         ("testClosure", testClosure),
         ("testEvaluate", testEvaluate),
         ("testException", testException),

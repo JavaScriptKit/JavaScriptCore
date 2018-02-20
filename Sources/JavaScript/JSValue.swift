@@ -113,6 +113,21 @@ extension JSValue {
     }
 }
 
+extension Array where Element == JSValue {
+    init(
+        start: UnsafePointer<JSValueRef?>?,
+        count: Int,
+        in context: JSObjectRef
+    ) {
+        var arguments = [JSValue]()
+        for i in 0..<count {
+            let valueRef = start!.advanced(by: i).pointee!
+            arguments.append(JSValue(context: context, pointer: valueRef))
+        }
+        self = arguments
+    }
+}
+
 extension JSValue: CustomStringConvertible {
     public var description: String {
         do {

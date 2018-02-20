@@ -14,8 +14,6 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
-import struct Foundation.URL
-
 public class JSContext {
     let group: JSContextGroupRef
     let context: JSGlobalContextRef
@@ -65,59 +63,5 @@ public class JSContext {
         let function = JSObjectMakeFunctionWithCallback(context, name, callback)
         try JSObjectSetProperty(context, global, name, function, .none)
         return function!
-    }
-}
-
-// MARK: register swift closure as javascript function
-
-public enum ReturnValue {
-    case undefined
-    case null
-    case bool(Bool)
-    case number(Double)
-    case string(String)
-}
-
-var functions: [OpaquePointer: [OpaquePointer: () throws -> ReturnValue]] = [:]
-
-extension JSContext {
-    public func createFunction(
-        name: String,
-        _ body: @escaping () throws -> ReturnValue
-    ) throws {
-        let function = try createFunction(name: name, callback: wrapper)
-        functions[global, default: [:]][function] = body
-    }
-}
-
-func wrapper(
-    ctx: JSContextRef!,
-    function: JSObjectRef!,
-    thisObject: JSObjectRef!,
-    argumentCount: Int,
-    arguments: UnsafePointer<JSValueRef?>?,
-    exception: UnsafeMutablePointer<JSValueRef?>?
-) -> JSValueRef? {
-    guard let body = functions[thisObject]?[function] else {
-        if let exception = exception {
-            let error = "swift error: unregistered function"
-            exception.pointee = JSValue(string: error, in: thisObject).pointer
-        }
-        return nil
-    }
-    do {
-        let result = try body()
-        switch result {
-        case .undefined: return JSValueMakeUndefined(ctx)
-        case .null: return JSValueMakeNull(ctx)
-        case .bool(let value): return JSValueMakeBoolean(ctx, value)
-        case .number(let value): return JSValueMakeNumber(ctx, value)
-        case .string(let value): return JSValue(string: value, in: ctx).pointer
-        }
-    } catch {
-        if let exception = exception {
-            exception.pointee = JSValue(string: "\(error)", in: ctx).pointer
-        }
-        return nil
     }
 }
