@@ -20,9 +20,17 @@ public struct JSError: Error, CustomStringConvertible {
     init(context: JSContextRef, pointer: JSValueRef) {
         let value = JSValue(context: context, pointer: pointer)
         do {
-            self.description = try value.toString()
+            guard value.isObject else {
+                description = "not an object"
+                return
+            }
+            guard let message = value["message"] else {
+                self.description = "failed to access error.message"
+                return
+            }
+            self.description = try message.toString()
         } catch {
-            self.description = "\(error)"
+            self.description = "failed to convert JSError"
         }
     }
 }
