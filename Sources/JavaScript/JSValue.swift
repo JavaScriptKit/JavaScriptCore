@@ -70,6 +70,26 @@ extension JSValue {
 }
 
 extension JSValue {
+    subscript(_ property: String) -> JSValue? {
+        guard isObject else {
+            return nil
+        }
+        let bytes = [UInt16](property.utf16)
+        let property = JSStringCreateWithCharacters(bytes, bytes.count)
+        defer { JSStringRelease(property) }
+
+        var exception: JSValueRef? = nil
+        let result = JSObjectGetProperty(context, pointer, property, &exception)
+
+        if exception != nil {
+            return nil
+        }
+        return JSValue(context: context, pointer: result!)
+    }
+}
+
+
+extension JSValue {
     public var isNull: Bool {
         return JSValueIsNull(context, pointer)
     }
@@ -88,6 +108,10 @@ extension JSValue {
 
     public var isString: Bool {
         return JSValueIsString(context, pointer)
+    }
+
+    public var isObject: Bool {
+        return JSValueIsObject(context, pointer)
     }
 }
 
