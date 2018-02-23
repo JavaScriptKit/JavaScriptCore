@@ -42,6 +42,7 @@ public class JSValue {
         self.context = context
         let bytes = [UInt16](string.utf16)
         let stringRef = JSStringCreateWithCharacters(bytes, bytes.count)
+        defer { JSStringRelease(stringRef) }
         self.pointer = JSValueMakeString(context, stringRef)
     }
 }
