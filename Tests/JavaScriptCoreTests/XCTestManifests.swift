@@ -2,6 +2,11 @@ import XCTest
 
 extension JSValueTests {
     static let __allTests = [
+        ("testIsBool", testIsBool),
+        ("testIsNull", testIsNull),
+        ("testIsNumber", testIsNumber),
+        ("testIsString", testIsString),
+        ("testIsUndefined", testIsUndefined),
         ("testProperty", testProperty),
         ("testToInt", testToInt),
         ("testToString", testToString),
