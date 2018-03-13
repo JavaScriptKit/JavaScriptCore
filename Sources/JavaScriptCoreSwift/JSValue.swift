@@ -14,6 +14,16 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
+protocol JSValueInitializable {
+    init(from jsValue: JSValue) throws
+}
+
+extension String: JSValueInitializable {
+    init(from jsValue: JSValue) throws {
+        self = try jsValue.toString()
+    }
+}
+
 public class JSValue {
     let context: JSContextRef
     let pointer: JSValueRef

@@ -2,6 +2,7 @@ import XCTest
 
 extension JSValueTests {
     static let __allTests = [
+        ("testProperty", testProperty),
         ("testToInt", testToInt),
         ("testToString", testToString),
     ]
