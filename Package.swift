@@ -20,6 +20,9 @@ let package = Package(
     ],
     dependencies: [
         .package(
+            url: "https://github.com/tris-foundation/platform.git",
+            .branch("master")),
+        .package(
             url: "https://github.com/tris-foundation/test.git",
             .branch("master"))
     ],
@@ -35,7 +38,7 @@ let package = Package(
             dependencies: ["CJavaScriptCore", "JavaScript"]),
         .target(
             name: "V8",
-            dependencies: ["CV8", "JavaScript"]),
+            dependencies: ["CV8", "Platform", "JavaScript"]),
         .target(
             name: "JavaScript",
             dependencies: []),

@@ -12,15 +12,19 @@ import CV8
 import JavaScript
 
 public class JSContext {
-    let runtime: JSRuntime
-    let context: UnsafeMutableRawPointer?
+    let isolate: UnsafeMutableRawPointer
+    let context: UnsafeMutableRawPointer
+    var template: UnsafeMutableRawPointer
 
     public init(_ runtime: JSRuntime = JSRuntime.global) {
-        self.runtime = runtime
-        self.context = CV8.createContext(runtime.isolate)
+        self.isolate = runtime.isolate
+        let template = CV8.createTemplate(runtime.isolate)
+        self.context = CV8.createContext(runtime.isolate, template)
+        self.template = template
     }
 
     deinit {
+        CV8.disposeTemplate(template)
         CV8.disposeContext(context)
     }
 }
@@ -30,15 +34,16 @@ struct JSError: Error, CustomStringConvertible {
 }
 
 extension JSContext: JavaScript.JSContext {
+    @discardableResult
     public func evaluate(_ script: String) throws -> JSValue {
         var exception: UnsafeMutableRawPointer?
-        guard let pointer = CV8.evaluate(runtime.isolate, context, script, &exception) else {
+        guard let pointer = CV8.evaluate(isolate, context, script, &exception) else {
             guard let exception = exception else {
                 fatalError("exception pointer is nil")
             }
-            let value = JSValue(pointer: exception, isolate: runtime.isolate)
+            let value = JSValue(isolate: isolate, pointer: exception)
             throw JSError(description: value.description)
         }
-        return JSValue(pointer: pointer, isolate: runtime.isolate)
+        return JSValue(isolate: isolate, pointer: pointer)
     }
 }
