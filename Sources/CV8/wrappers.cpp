@@ -132,7 +132,9 @@ extern "C" {
         MaybeLocal<Value> result = script->Run(context);
 
         if (result.IsEmpty()) {
-            *exception = new Global<Value>(isolate, trycatch.Exception());
+            if (exception != nullptr) {
+                *exception = new Global<Value>(isolate, trycatch.Exception());
+            }
             return nullptr;
         }
         auto local = result.ToLocalChecked();
@@ -263,5 +265,29 @@ extern "C" {
     void setReturnValueEmptyString(void* isolatePtr, void* returnValuePtr) {
         auto returnValue = reinterpret_cast<ReturnValue<Value>*>(returnValuePtr);
         returnValue->SetEmptyString();
+    }
+
+    // MARK: properties
+
+    void* getProperty(void* isolatePtr, void* valuePtr, const char* keyPtr, void** exception) {
+        auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
+        auto value = reinterpret_cast<Global<Value>*>(valuePtr);
+
+        Locker isolateLocker(isolate);
+        TryCatch trycatch(isolate);
+        Isolate::Scope isolate_scope(isolate);
+        HandleScope handle_scope(isolate);
+
+        auto object = value->Get(isolate)->ToObject();
+        auto key = String::NewFromUtf8(isolate, keyPtr);
+        auto result = object->GetRealNamedProperty(key);
+
+        if (result.IsEmpty()) {
+            if (exception != nullptr) {
+                *exception = new Global<Value>(isolate, trycatch.Exception());
+            }
+            return nullptr;
+        }
+        return new Global<Value>(isolate, result);
     }
 }

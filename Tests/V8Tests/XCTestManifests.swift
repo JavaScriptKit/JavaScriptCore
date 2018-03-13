@@ -7,6 +7,7 @@ extension JSValueTests {
         ("testIsNumber", testIsNumber),
         ("testIsString", testIsString),
         ("testIsUndefined", testIsUndefined),
+        ("testProperty", testProperty),
         ("testToInt", testToInt),
         ("testToString", testToString),
     ]
