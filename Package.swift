@@ -28,10 +28,13 @@ let package = Package(
             name: "CJavaScriptCore",
             dependencies: []),
         .target(
+            name: "JavaScriptCoreSwift",
+            dependencies: ["CJavaScriptCore", "JavaScript"]),
+        .target(
             name: "JavaScript",
-            dependencies: ["CJavaScriptCore"]),
+            dependencies: []),
         .testTarget(
-            name: "JavaScriptTests",
-            dependencies: ["Test", "JavaScript"])
+            name: "JavaScriptCoreTests",
+            dependencies: ["Test", "JavaScriptCoreSwift"]),
     ]
 )

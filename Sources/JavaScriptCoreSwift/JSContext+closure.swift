@@ -14,20 +14,14 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
-public enum ReturnValue {
-    case undefined
-    case null
-    case bool(Bool)
-    case number(Double)
-    case string(String)
-}
+@_exported import JavaScript
 
-private var functions: [OpaquePointer: ([JSValue]) throws -> ReturnValue] = [:]
+private var functions: [OpaquePointer: ([JSValue]) throws -> Value] = [:]
 
 extension JSContext {
     public func createFunction(
         name: String,
-        _ body: @escaping ([JSValue]) throws -> ReturnValue) throws
+        _ body: @escaping ([JSValue]) throws -> Value) throws
     {
         let function = try createFunction(name: name, callback: wrapper)
         functions[function] = body
@@ -48,7 +42,7 @@ extension JSContext {
 extension JSContext {
     public func createFunction(
         name: String,
-        _ body: @escaping () throws -> ReturnValue) throws
+        _ body: @escaping () throws -> Value) throws
     {
         return try createFunction(name: name) { _ in
             return try body()

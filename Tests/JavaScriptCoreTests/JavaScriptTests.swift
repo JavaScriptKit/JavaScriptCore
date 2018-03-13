@@ -9,7 +9,7 @@
  */
 
 import Test
-@testable import JavaScript
+@testable import JavaScriptCoreSwift
 
 final class JavaScriptCoreTests: TestCase {
     func testEvaluate() {
@@ -20,7 +20,7 @@ final class JavaScriptCoreTests: TestCase {
     func testException() {
         let context = JSContext()
         assertThrowsError(try context.evaluate("x()")) { error in
-            assertEqual("\(error)", "ReferenceError: Can't find variable: x")
+            assertEqual("\(error)", "Can't find variable: x")
         }
     }
 
@@ -46,57 +46,30 @@ final class JavaScriptCoreTests: TestCase {
             }
             let undefinedResult = try context.evaluate("testUndefined()")
             assertTrue(undefinedResult.isUndefined)
-            assertFalse(undefinedResult.isNull)
-            assertFalse(undefinedResult.isBool)
-            assertFalse(undefinedResult.isNumber)
-            assertFalse(undefinedResult.isString)
-            assertEqual(try undefinedResult.toString(), "undefined")
-
 
             try context.createFunction(name: "testNull") {
                 return .null
             }
             let nullResult = try context.evaluate("testNull()")
-            assertFalse(nullResult.isUndefined)
             assertTrue(nullResult.isNull)
-            assertFalse(nullResult.isBool)
-            assertFalse(nullResult.isNumber)
-            assertFalse(nullResult.isString)
-            assertEqual(try nullResult.toString(), "null")
-
 
             try context.createFunction(name: "testBool") {
                 return .bool(true)
             }
             let boolResult = try context.evaluate("testBool()")
-            assertFalse(boolResult.isUndefined)
-            assertFalse(boolResult.isNull)
             assertTrue(boolResult.isBool)
-            assertFalse(boolResult.isNumber)
-            assertFalse(boolResult.isString)
-            assertEqual(boolResult.toBool(), true)
 
             try context.createFunction(name: "testNumber") {
                 return .number(3.14)
             }
             let numberResult = try context.evaluate("testNumber()")
-            assertFalse(numberResult.isUndefined)
-            assertFalse(numberResult.isNull)
-            assertFalse(numberResult.isBool)
             assertTrue(numberResult.isNumber)
-            assertFalse(numberResult.isString)
-            assertEqual(try numberResult.toDouble(), 3.14)
 
             try context.createFunction(name: "testString") {
                 return .string("success")
             }
             let stringResult = try context.evaluate("testString()")
-            assertFalse(stringResult.isUndefined)
-            assertFalse(stringResult.isNull)
-            assertFalse(stringResult.isBool)
-            assertFalse(stringResult.isNumber)
             assertTrue(stringResult.isString)
-            assertEqual(try stringResult.toString(), "success")
         } catch {
             fail(String(describing: error))
         }
@@ -108,7 +81,7 @@ final class JavaScriptCoreTests: TestCase {
 
             var captured = false
             try context.createFunction(name: "testCapture")
-            { (_) -> ReturnValue in
+            { (_) -> Value in
                 captured = true
                 return .string("captured")
             }
