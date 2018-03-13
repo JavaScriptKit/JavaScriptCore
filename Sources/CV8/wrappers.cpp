@@ -12,6 +12,7 @@
 #include <string.h> // memset, memcpy
 #include <libplatform/libplatform.h>
 #include <v8.h>
+#include "wrappers.h"
 
 using namespace v8;
 
@@ -62,7 +63,7 @@ private:
 extern "C" {
     ArrayBufferAllocator bufferAllocator;
 
-    const void* initialize() {
+    void* initialize() {
         V8::InitializeICU();
         auto platform = platform::CreateDefaultPlatform();
         V8::InitializePlatform(platform);
@@ -76,7 +77,7 @@ extern "C" {
         delete reinterpret_cast<Platform*>(platform);;
     }
 
-    const void* createIsolate() {
+    void* createIsolate() {
         Isolate::CreateParams create_params;
         create_params.array_buffer_allocator = &bufferAllocator;
         return Isolate::New(create_params);
@@ -86,12 +87,29 @@ extern "C" {
         reinterpret_cast<Isolate*>(isolate)->Dispose();
     }
 
-    void* createContext(void* isolatePtr) {
+    void* createTemplate(void* isolatePtr) {
         auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
         Locker isolateLocker(isolate);
         Isolate::Scope isolate_scope(isolate);
         HandleScope handle_scope(isolate);
-        Local<Context> context = Context::New(isolate);
+        Local<ObjectTemplate> globalObject = ObjectTemplate::New(isolate);
+        return new Global<ObjectTemplate>(isolate, globalObject);
+    }
+
+    void disposeTemplate(void* context) {
+        delete reinterpret_cast<Global<ObjectTemplate>*>(context);
+    }
+
+    void* createContext(void* isolatePtr, void* templatePtr) {
+        auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
+        auto globalGlobalTemplate = reinterpret_cast<Global<ObjectTemplate>*>(templatePtr);
+
+        Locker isolateLocker(isolate);
+        Isolate::Scope isolate_scope(isolate);
+        HandleScope handle_scope(isolate);
+
+        auto globalTemplate = globalGlobalTemplate->Get(isolate);
+        Local<Context> context = Context::New(isolate, NULL, globalTemplate);
         return new Global<Context>(isolate, context);
     }
 
@@ -172,5 +190,78 @@ extern "C" {
     bool isObject(void* isolate, void* value) {
         GlobalValue scoped(isolate, value);
         return scoped->IsObject();
+    }
+
+    // MARK: functions
+
+    static void callback(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        int32_t id = args.Data()->Int32Value();
+
+        Isolate* isolate = args.GetIsolate();
+        HandleScope scope(isolate);
+
+        void* values[args.Length()];
+        for(int i = 0; i < args.Length(); i++) {
+            values[i] = new Global<Value>(isolate, args[i]);
+        }
+        auto returnValue = args.GetReturnValue();
+        swiftCallback(isolate, id, values, args.Length(), &returnValue);
+    }
+
+    void createFunction(void* isolatePtr, void* contextPtr, void* templatePtr, const char* namePtr, int32_t id) {
+        auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
+        auto globalContext = reinterpret_cast<Global<Context>*>(contextPtr);
+        auto globalGlobalTemplate = reinterpret_cast<Global<ObjectTemplate>*>(templatePtr);
+
+        Locker isolateLocker(isolate);
+        Isolate::Scope isolate_scope(isolate);
+        HandleScope handle_scope(isolate);
+        
+        auto data = Integer::New(isolate, id);
+        auto globalTemplate = globalGlobalTemplate->Get(isolate);
+        globalTemplate->Set(
+                            String::NewFromUtf8(isolate, namePtr),
+                            FunctionTemplate::New(isolate, callback, data));
+
+        auto context = globalContext->Get(isolate);
+        auto globalObject = context->Global();
+        context->DetachGlobal();
+
+        auto newContext = Context::New(isolate, NULL, globalTemplate, globalObject);
+
+        globalContext->Reset(isolate, newContext);
+    }
+
+    void setReturnValueUndefined(void* isolatePtr, void* returnValuePtr) {
+        auto returnValue = reinterpret_cast<ReturnValue<Value>*>(returnValuePtr);
+        returnValue->SetUndefined();
+    }
+
+    void setReturnValueNull(void* isolatePtr, void* returnValuePtr) {
+        auto returnValue = reinterpret_cast<ReturnValue<Value>*>(returnValuePtr);
+        returnValue->SetNull();
+    }
+
+    void setReturnValueBoolean(void* isolatePtr, void* returnValuePtr, bool value) {
+        auto returnValue = reinterpret_cast<ReturnValue<Value>*>(returnValuePtr);
+        returnValue->Set(value);
+    }
+
+    void setReturnValueNumber(void* isolatePtr, void* returnValuePtr, double value) {
+        auto returnValue = reinterpret_cast<ReturnValue<Value>*>(returnValuePtr);
+        returnValue->Set(value);
+    }
+
+    void setReturnValueString(void* isolatePtr, void* returnValuePtr, const char* utf8) {
+        auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
+        auto returnValue = reinterpret_cast<ReturnValue<Value>*>(returnValuePtr);
+
+        auto string = String::NewFromUtf8(isolate, utf8);
+        returnValue->Set(string);
+    }
+
+    void setReturnValueEmptyString(void* isolatePtr, void* returnValuePtr) {
+        auto returnValue = reinterpret_cast<ReturnValue<Value>*>(returnValuePtr);
+        returnValue->SetEmptyString();
     }
 }

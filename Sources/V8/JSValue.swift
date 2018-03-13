@@ -15,9 +15,9 @@ public class JSValue {
     let isolate: UnsafeMutableRawPointer
     let pointer: UnsafeMutableRawPointer
 
-    init(pointer: UnsafeMutableRawPointer, isolate: UnsafeMutableRawPointer) {
-        self.pointer = pointer
+    init(isolate: UnsafeMutableRawPointer, pointer: UnsafeMutableRawPointer) {
         self.isolate = isolate
+        self.pointer = pointer
     }
 
     deinit {

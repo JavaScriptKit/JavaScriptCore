@@ -22,6 +22,7 @@ public class JSRuntime {
     public required init() {
         self.platform = initialize()
         self.isolate = createIsolate()
+        CV8.swiftCallback = functionWrapper
     }
 
     deinit {

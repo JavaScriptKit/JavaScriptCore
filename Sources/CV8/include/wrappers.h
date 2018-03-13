@@ -18,29 +18,48 @@
 extern "C" {
 #endif
 
+    // global
+    void * _Nonnull initialize();
+    void dispose(void * _Nonnull platform);
+    // isolate
+    void * _Nonnull createIsolate();
+    void disposeIsolate(void * _Nonnull isolate);
+    // global template
+    void * _Nonnull createTemplate(void * _Nonnull isolate);
+    void disposeTemplate(void * _Nonnull context);
+    // context
+    void * _Nonnull createContext(void * _Nonnull isolate, void * _Nonnull globalTemplate);
+    void disposeContext(void * _Nonnull context);
 
-    void* initialize();
-    void dispose(void* platform);
-    void* createIsolate();
-    void disposeIsolate(void* isolate);
 
-    void* createContext(void* isolate);
-    void disposeContext(void* context);
+    // called from JSValue's destructor
+    void disposeValue(void * _Nonnull pointer);
 
-    void* evaluate(void* isolatePtr, void* contextPtr, const char* scriptPtr, void** exception);
-    void disposeValue(void* pointer);
+    void * _Nullable evaluate(void * _Nonnull isolatePtr, void * _Nonnull contextPtr, const char* _Nonnull scriptPtr, void * _Nullable* _Nonnull exception);
 
-    int getUtf8StringLength(void* isolatePtr, void* valuePtr);
-    void copyUtf8String(void* isolatePtr, void* valuePtr, void* buffer, int count);
+    int getUtf8StringLength(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
+    void copyUtf8String(void * _Nonnull isolatePtr, void * _Nonnull valuePtr, void * _Nonnull buffer, int count);
 
-    int64_t valueToInt(void* isolatePtr, void* valuePtr);
+    int64_t valueToInt(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
 
-    bool isNull(void* isolatePtr, void* valuePtr);
-    bool isUndefined(void* isolatePtr, void* valuePtr);
-    bool isBoolean(void* isolatePtr, void* valuePtr);
-    bool isNumber(void* isolatePtr, void* valuePtr);
-    bool isString(void* isolatePtr, void* valuePtr);
-    bool isObject(void* isolatePtr, void* valuePtr);
+
+    bool isNull(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
+    bool isUndefined(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
+    bool isBoolean(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
+    bool isNumber(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
+    bool isString(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
+    bool isObject(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
+
+
+    void (* _Nullable swiftCallback)(void * _Nonnull isolate, int32_t id, void * _Nullable * _Nonnull arguments, int32_t count, void * _Nonnull returnValue);
+    void createFunction(void * _Nonnull  isolatePtr, void * _Nonnull contextPtr, void * _Nonnull templatePtr, const char* _Nonnull namePtr, int32_t id);
+
+    void setReturnValueUndefined(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr);
+    void setReturnValueNull(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr);
+    void setReturnValueBoolean(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr, bool value);
+    void setReturnValueNumber(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr, double value);
+    void setReturnValueString(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr, const char* _Nonnull utf8);
+    void setReturnValueEmptyString(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr);
 
 
 #ifdef __cplusplus
