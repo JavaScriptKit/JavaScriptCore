@@ -35,7 +35,7 @@ extern "C" {
     // called from JSValue's destructor
     void disposeValue(void * _Nonnull pointer);
 
-    void * _Nullable evaluate(void * _Nonnull isolatePtr, void * _Nonnull contextPtr, const char* _Nonnull scriptPtr, void * _Nullable* _Nonnull exception);
+    void * _Nullable evaluate(void * _Nonnull isolatePtr, void * _Nonnull contextPtr, const char* _Nonnull scriptPtr, void * _Nullable* _Nullable exception);
 
     int getUtf8StringLength(void * _Nonnull isolatePtr, void * _Nonnull valuePtr);
     void copyUtf8String(void * _Nonnull isolatePtr, void * _Nonnull valuePtr, void * _Nonnull buffer, int count);
@@ -60,6 +60,8 @@ extern "C" {
     void setReturnValueNumber(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr, double value);
     void setReturnValueString(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr, const char* _Nonnull utf8);
     void setReturnValueEmptyString(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr);
+
+    void * _Nullable getProperty(void * _Nonnull isolate, void * _Nonnull value, const char * _Nonnull key, void * _Nullable* _Nullable exception);
 
 
 #ifdef __cplusplus

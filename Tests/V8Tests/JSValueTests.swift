@@ -109,4 +109,20 @@ final class JSValueTests: TestCase {
             fail(String(describing: error))
         }
     }
+
+    func testProperty() {
+        do {
+            let runtime = JSRuntime()
+            let context = JSContext(runtime)
+            let result = try context.evaluate("""
+                (function(){
+                    return { property: 'test' }
+                })()
+                """)
+
+            assertEqual(try result["property"]?.toString(), "test")
+        } catch {
+            fail(String(describing: error))
+        }
+    }
 }

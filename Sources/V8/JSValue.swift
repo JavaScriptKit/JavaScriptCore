@@ -63,6 +63,18 @@ extension JSValue: JavaScript.JSValue {
     }
 }
 
+extension JSValue {
+    subscript(_ key: String) -> JSValue? {
+        guard isObject else {
+            return nil
+        }
+        guard let result = getProperty(isolate, pointer, key, nil) else {
+            return nil
+        }
+        return JSValue(isolate: isolate, pointer: result)
+    }
+}
+
 extension JSValue: CustomStringConvertible {
     public var description: String {
         return try! toString()
