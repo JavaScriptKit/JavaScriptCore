@@ -14,9 +14,9 @@ import PackageDescription
 let package = Package(
     name: "JavaScript",
     products: [
-        .library(
-            name: "JavaScript",
-            targets: ["JavaScript"])
+        .library(name: "JavaScript", targets: ["JavaScript"]),
+        .library(name: "V8", targets: ["V8"]),
+        .library(name: "JavaScriptCoreSwift", targets: ["JavaScriptCoreSwift"])
     ],
     dependencies: [
         .package(
