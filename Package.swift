@@ -28,13 +28,23 @@ let package = Package(
             name: "CJavaScriptCore",
             dependencies: []),
         .target(
+            name: "CV8",
+            dependencies: []),
+        .target(
             name: "JavaScriptCoreSwift",
             dependencies: ["CJavaScriptCore", "JavaScript"]),
+        .target(
+            name: "V8",
+            dependencies: ["CV8", "JavaScript"]),
         .target(
             name: "JavaScript",
             dependencies: []),
         .testTarget(
             name: "JavaScriptCoreTests",
             dependencies: ["Test", "JavaScriptCoreSwift"]),
-    ]
+        .testTarget(
+            name: "V8Tests",
+            dependencies: ["Test", "V8"]),
+    ],
+    cxxLanguageStandard: .cxx11
 )
