@@ -64,7 +64,7 @@ extension JSValue: JavaScript.JSValue {
 }
 
 extension JSValue {
-    subscript(_ key: String) -> JSValue? {
+    public subscript(_ key: String) -> JSValue? {
         guard isObject else {
             return nil
         }
