@@ -129,7 +129,7 @@ extern "C" {
         Context::Scope context_scope(context);
         Local<String> source = String::NewFromUtf8(isolate, scriptPtr);
         Local<Script> script = Script::Compile(source);
-        MaybeLocal<Value> result = script->Run(context);
+        Local<Value> result = script->Run();
 
         if (result.IsEmpty()) {
             if (exception != nullptr) {
@@ -137,8 +137,7 @@ extern "C" {
             }
             return nullptr;
         }
-        auto local = result.ToLocalChecked();
-        return new Global<Value>(isolate, local);
+        return new Global<Value>(isolate, result);
     }
 
     void disposeValue(void* pointer) {
