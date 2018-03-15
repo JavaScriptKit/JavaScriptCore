@@ -112,8 +112,7 @@ final class JSValueTests: TestCase {
 
     func testProperty() {
         do {
-            let runtime = JSRuntime()
-            let context = JSContext(runtime)
+            let context = JSContext()
             let result = try context.evaluate("""
                 (function(){
                     return { property: 'test' }
