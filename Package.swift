@@ -16,6 +16,7 @@ let package = Package(
     products: [
         .library(name: "JavaScript", targets: ["JavaScript"]),
         .library(name: "V8", targets: ["V8"]),
+        .library(name: "V8API", targets: ["V8API"]),
         .library(name: "JavaScriptCoreSwift", targets: ["JavaScriptCoreSwift"])
     ],
     dependencies: [
@@ -34,11 +35,17 @@ let package = Package(
             name: "CV8",
             dependencies: []),
         .target(
+            name: "CV8Platform",
+            dependencies: []),
+        .target(
             name: "JavaScriptCoreSwift",
             dependencies: ["CJavaScriptCore", "JavaScript"]),
         .target(
-            name: "V8",
+            name: "V8API",
             dependencies: ["CV8", "Platform", "JavaScript"]),
+        .target(
+            name: "V8",
+            dependencies: ["CV8Platform", "V8API", "Platform", "JavaScript"]),
         .target(
             name: "JavaScript",
             dependencies: []),

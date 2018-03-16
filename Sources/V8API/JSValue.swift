@@ -25,7 +25,6 @@ public class JSValue {
     }
 }
 
-
 extension JSValue: JavaScript.JSValue {
     public var isNull: Bool {
         return CV8.isNull(isolate, pointer)

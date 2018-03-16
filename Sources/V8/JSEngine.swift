@@ -8,7 +8,6 @@
  * See CONTRIBUTORS.txt for the list of the project authors
  */
 
-import CV8
 import JavaScript
 
 public class JSEngine: JavaScript.JSEngine {
