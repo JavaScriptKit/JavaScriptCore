@@ -10,6 +10,5 @@
 
 module CV8 [system] {
     header "c_v8.h"
-    link "v8"
     export *
 }
