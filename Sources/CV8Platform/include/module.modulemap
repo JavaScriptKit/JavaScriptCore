@@ -8,8 +8,8 @@
  * See CONTRIBUTORS.txt for the list of the project authors
  */
 
-module CV8 [system] {
-    header "c_v8.h"
+module CV8Platform [system] {
+    header "c_v8_platrofm.h"
     link "v8"
     export *
 }

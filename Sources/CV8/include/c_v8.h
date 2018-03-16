@@ -8,8 +8,8 @@
  * See CONTRIBUTORS.txt for the list of the project authors
  */
 
-#ifndef wrappers_h
-#define wrappers_h
+#ifndef c_v8_h
+#define c_v8_h
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -18,12 +18,6 @@
 extern "C" {
 #endif
 
-    // global
-    void * _Nonnull initialize();
-    void dispose(void * _Nonnull platform);
-    // isolate
-    void * _Nonnull createIsolate();
-    void disposeIsolate(void * _Nonnull isolate);
     // global template
     void * _Nonnull createTemplate(void * _Nonnull isolate);
     void disposeTemplate(void * _Nonnull context);
@@ -68,4 +62,4 @@ extern "C" {
 }
 #endif
 
-#endif /* wrappers_h */
+#endif /* c_v8_h */

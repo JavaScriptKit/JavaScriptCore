@@ -8,8 +8,10 @@
  * See CONTRIBUTORS.txt for the list of the project authors
  */
 
-import CV8
+import CV8Platform
 import JavaScript
+
+@_exported import V8API
 
 public class JSRuntime {
     let platform: UnsafeMutableRawPointer
@@ -20,9 +22,11 @@ public class JSRuntime {
     }()
 
     public required init() {
+        // The whole V8API & V8 split is caused
+        // by difference in this initialization
+        // between standalone v8 and node.js
         self.platform = initialize()
         self.isolate = createIsolate()
-        CV8.swiftCallback = functionWrapper
     }
 
     deinit {
@@ -31,8 +35,14 @@ public class JSRuntime {
     }
 }
 
+extension V8API.JSContext {
+    public convenience init(_ runtime: JSRuntime = JSRuntime.global) {
+        self.init(isolate: runtime.isolate)
+    }
+}
+
 extension JSRuntime: JavaScript.JSRuntime {
-    public func createContext() -> JSContext {
-        return JSContext(self)
+    public func createContext() -> V8API.JSContext {
+        return JSContext()
     }
 }
