@@ -8,8 +8,8 @@
  * See CONTRIBUTORS.txt for the list of the project authors
  */
 
-#ifndef c_v8_platrofm_h
-#define c_v8_platrofm_h
+#ifndef c_v8_platform_h
+#define c_v8_platform_h
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -29,4 +29,4 @@ extern "C" {
 }
 #endif
 
-#endif /* c_v8_platrofm_h */
+#endif /* c_v8_platform_h */

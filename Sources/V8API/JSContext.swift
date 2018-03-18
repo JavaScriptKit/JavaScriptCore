@@ -18,9 +18,8 @@ public class JSContext {
 
     public init(isolate: UnsafeMutableRawPointer) {
         self.isolate = isolate
-        let template = CV8.createTemplate(isolate)
+        self.template = CV8.createTemplate(isolate)
         self.context = CV8.createContext(isolate, template)
-        self.template = template
     }
 
     deinit {

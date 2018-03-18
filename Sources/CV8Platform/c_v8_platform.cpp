@@ -12,7 +12,7 @@
 #include <string.h> // memset, memcpy
 #include <libplatform/libplatform.h>
 #include <v8.h>
-#include "c_v8_platrofm.h"
+#include "c_v8_platform.h"
 
 using namespace v8;
 

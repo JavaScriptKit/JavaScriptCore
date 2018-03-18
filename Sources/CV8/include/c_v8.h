@@ -46,7 +46,7 @@ extern "C" {
 
 
     void (* _Nullable swiftCallback)(void * _Nonnull isolate, int32_t id, void * _Nullable * _Nonnull arguments, int32_t count, void * _Nonnull returnValue);
-    void createFunction(void * _Nonnull  isolatePtr, void * _Nonnull contextPtr, void * _Nonnull templatePtr, const char* _Nonnull namePtr, int32_t id);
+    void createFunction(void * _Nonnull  isolatePtr, void * _Nonnull contextPtr, const char* _Nonnull namePtr, int32_t id);
 
     void setReturnValueUndefined(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr);
     void setReturnValueNull(void * _Nonnull isolatePtr, void * _Nonnull returnValuePtr);

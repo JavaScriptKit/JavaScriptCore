@@ -105,4 +105,35 @@ final class V8Tests: TestCase {
             fail(String(describing: error))
         }
     }
+
+    func testPersistentContext() {
+        do {
+            let context = JSContext()
+            try context.evaluate("result = 'success'")
+            assertEqual(try context.evaluate("result").toString(), "success")
+
+            try context.createFunction(name: "test") { (arguments) -> Value in
+                return .string("test ok")
+            }
+
+            assertEqual(try context.evaluate("result").toString(), "success")
+        } catch {
+            fail(String(describing: error))
+        }
+    }
+
+    func testSandbox() {
+        do {
+            let context = JSContext()
+            try context.evaluate("test = 'hello'")
+            let result = try context.evaluate("test")
+            assertEqual(try result.toString(), "hello")
+        } catch {
+            fail(String(describing: error))
+            return
+        }
+
+        let context = JSContext()
+        assertThrowsError(try context.evaluate("test"))
+    }
 }
