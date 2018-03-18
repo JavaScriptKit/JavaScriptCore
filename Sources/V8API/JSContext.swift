@@ -11,17 +11,12 @@
 import CV8
 import JavaScript
 
-private var swiftCallback: Void = {
-    CV8.swiftCallback = V8API.functionWrapper
-}()
-
 public class JSContext {
     let isolate: UnsafeMutableRawPointer
     let context: UnsafeMutableRawPointer
     var template: UnsafeMutableRawPointer
 
     public init(isolate: UnsafeMutableRawPointer) {
-        _ = swiftCallback
         self.isolate = isolate
         let template = CV8.createTemplate(isolate)
         self.context = CV8.createContext(isolate, template)
