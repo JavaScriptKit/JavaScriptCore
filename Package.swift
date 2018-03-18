@@ -45,7 +45,7 @@ let package = Package(
             dependencies: ["CV8", "Platform", "JavaScript"]),
         .target(
             name: "V8",
-            dependencies: ["CV8Platform", "V8API", "Platform", "JavaScript"]),
+            dependencies: ["CV8Platform", "V8API", "JavaScript"]),
         .target(
             name: "JavaScript",
             dependencies: []),
