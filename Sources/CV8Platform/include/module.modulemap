@@ -9,7 +9,7 @@
  */
 
 module CV8Platform [system] {
-    header "c_v8_platrofm.h"
+    header "c_v8_platform.h"
     link "v8"
     export *
 }

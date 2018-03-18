@@ -172,27 +172,22 @@ extern "C" {
         swiftCallback(isolate, id, values, args.Length(), &returnValue);
     }
 
-    void createFunction(void* isolatePtr, void* contextPtr, void* templatePtr, const char* namePtr, int32_t id) {
+    void createFunction(void* isolatePtr, void* contextPtr, const char* namePtr, int32_t id) {
         auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
         auto globalContext = reinterpret_cast<Global<Context>*>(contextPtr);
-        auto globalGlobalTemplate = reinterpret_cast<Global<ObjectTemplate>*>(templatePtr);
 
         Locker isolateLocker(isolate);
         Isolate::Scope isolate_scope(isolate);
         HandleScope handle_scope(isolate);
-        
-        auto data = Integer::New(isolate, id);
-        auto globalTemplate = globalGlobalTemplate->Get(isolate);
-        globalTemplate->Set(
-                            String::NewFromUtf8(isolate, namePtr),
-                            FunctionTemplate::New(isolate, callback, data));
 
         auto context = globalContext->Get(isolate);
-        auto globalObject = context->Global();
-        context->DetachGlobal();
+        Context::Scope context_scope(context);
 
-        auto newContext = Context::New(isolate, NULL, globalTemplate, globalObject);
-        globalContext->Reset(isolate, newContext);
+        auto data = Integer::New(isolate, id);
+        auto name = String::NewFromUtf8(isolate, namePtr);
+        auto functionTemplate = FunctionTemplate::New(isolate, callback, data);
+        auto prototype = Local<Object>::Cast(context->Global()->GetPrototype());
+        prototype->Set(name, functionTemplate->GetFunction());
     }
 
     void setReturnValueUndefined(void* isolatePtr, void* returnValuePtr) {
