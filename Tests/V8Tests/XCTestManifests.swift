@@ -21,6 +21,8 @@ extension V8Tests {
         ("testEvaluate", testEvaluate),
         ("testException", testException),
         ("testFunction", testFunction),
+        ("testPersistentContext", testPersistentContext),
+        ("testSandbox", testSandbox),
     ]
 }
 
