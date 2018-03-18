@@ -16,15 +16,31 @@ public class JSContext {
     let context: UnsafeMutableRawPointer
     var template: UnsafeMutableRawPointer
 
+    let unowned: Bool
+
+    public init(
+        isolate: UnsafeMutableRawPointer,
+        context: UnsafeMutableRawPointer,
+        template: UnsafeMutableRawPointer)
+    {
+        self.unowned = true
+        self.isolate = isolate
+        self.context = context
+        self.template = template
+    }
+
     public init(isolate: UnsafeMutableRawPointer) {
+        self.unowned = false
         self.isolate = isolate
         self.template = CV8.createTemplate(isolate)
         self.context = CV8.createContext(isolate, template)
     }
 
     deinit {
-        CV8.disposeTemplate(template)
-        CV8.disposeContext(context)
+        if !unowned {
+            CV8.disposeTemplate(template)
+            CV8.disposeContext(context)
+        }
     }
 }
 
