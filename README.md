@@ -51,7 +51,7 @@ assertEqual(try result.toString(), "result string")
 assertEqual("\(result)", "result string")
 ```
 
-## Useful commands
+## SwiftPM arguments
 
 ### macOS
 ```bash
@@ -74,5 +74,6 @@ swift test \
 
 ### Linux
 ```bash
+swift build -Xlinker /usr/lib/libv8_libbase.a -Xlinker /usr/lib/libv8_libplatform.a
 swift test -Xlinker /usr/lib/libv8_libbase.a -Xlinker /usr/lib/libv8_libplatform.a
 ```
