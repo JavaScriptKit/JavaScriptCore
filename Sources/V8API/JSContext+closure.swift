@@ -12,6 +12,10 @@ import CV8
 import Platform
 @_exported import JavaScript
 
+private var swiftCallback: Void = {
+    CV8.swiftCallback = V8API.functionWrapper
+}()
+
 private var functions: [Int32: ([JSValue]) throws -> Value] = [:]
 
 extension JSContext {
@@ -27,8 +31,9 @@ extension JSContext {
         name: String,
         _ body: @escaping ([JSValue]) throws -> Value) throws
     {
+        _ = swiftCallback
         let id = generateId()
-        CV8.createFunction(isolate, context, template, name, id)
+        CV8.createFunction(isolate, context, name, id)
         functions[id] = body
     }
 
@@ -36,9 +41,7 @@ extension JSContext {
         name: String,
         _ body: @escaping ([JSValue]) throws -> Void) throws
     {
-        let id = generateId()
-        CV8.createFunction(isolate, context, template, name, id)
-        functions[id] = { arguments in
+        try createFunction(name: name) { arguments -> Value in
             try body(arguments)
             return .undefined
         }
