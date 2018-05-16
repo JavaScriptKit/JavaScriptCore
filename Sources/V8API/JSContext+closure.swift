@@ -23,7 +23,7 @@ extension JSContext {
     func generateId() -> Int32 {
         var id: Int32 = 0
         repeat {
-            id = Int32(bitPattern: arc4random())
+            id = Int32.random(in: 0...Int32.max)
         } while functions[id] != nil
         return id
     }
