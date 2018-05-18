@@ -14,28 +14,6 @@ This package provides JavaScript APIs for several engines.
 .package(url: "https://github.com/tris-foundation/javascript.git", .branch("master"))
 ```
 
-## Requirements
-
-### V8
-
-#### macOS
-```bash
-brew install v8
-```
-
-#### Linux
-```bash
-add-apt-repository -y ppa:pinepain/libv8-archived
-apt update && apt install -y libv8-dev
-```
-
-### JavaScriptCore
-
-#### Linux
-```bash
-apt install -y libjavascriptcoregtk-1.0-dev
-```
-
 ## Usage
 
 ```swift
@@ -51,29 +29,65 @@ assertEqual(try result.toString(), "result string")
 assertEqual("\(result)", "result string")
 ```
 
-## SwiftPM arguments
+## Requirements
 
 ### macOS
+
+#### V8
+
+Default homebrew formula is outdated, please remove it first
+
+```bash
+brew remove v8
+```
+
+```bash
+brew tap tris-foundation/tap
+brew install libv8
+```
+
+#### JavaScriptCore
+
+Works OOB
+
+#### SwiftPM arguments
+
 ```bash
 swift package \
  -Xcc -I/usr/local/include \
  -Xlinker -L/usr/local/lib \
  -Xlinker /usr/local/lib/libv8.dylib \
- -Xlinker /usr/local/lib/libv8_libbase.a \
- -Xlinker /usr/local/lib/libv8_libplatform.a \
+ -Xlinker /usr/local/lib/libv8_libbase.dylib \
+ -Xlinker /usr/local/lib/libv8_libplatform.dylib \
  generate-xcodeproj
 
 swift test \
  -Xlinker /System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/JavaScriptCore \
  -Xcc -I/usr/local/include \
  -Xlinker /usr/local/lib/libv8.dylib \
- -Xlinker /usr/local/lib/libv8_libbase.a \
- -Xlinker /usr/local/lib/libv8_libplatform.a \
+ -Xlinker /usr/local/lib/libv8_libbase.dylib \
+ -Xlinker /usr/local/lib/libv8_libplatform.dylib \
  --generate-linuxmain
 ```
 
 ### Linux
+
+#### V8
+
 ```bash
-swift build -Xlinker /usr/lib/libv8_libbase.a -Xlinker /usr/lib/libv8_libplatform.a
-swift test -Xlinker /usr/lib/libv8_libbase.a -Xlinker /usr/lib/libv8_libplatform.a
+add-apt-repository -y ppa:pinepain/libv8
+apt update && apt install -y libv8-6.6-dev
+```
+
+#### JavaScriptCore
+```bash
+apt install -y libjavascriptcoregtk-1.0-dev
+```
+
+#### SwiftPM arguments
+
+```bash
+export LD_LIBRARY_PATH=/opt/libv8-6.6/lib
+swift build -Xcc -I/opt/libv8-6.6/include -Xlinker -L/opt/libv8-6.6/lib -Xlinker -lv8_libbase -Xlinker -lv8_libplatform
+swift test -Xcc -I/opt/libv8-6.6/include -Xlinker -L/opt/libv8-6.6/lib -Xlinker -lv8_libbase -Xlinker -lv8_libplatform
 ```
