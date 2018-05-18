@@ -42,7 +42,7 @@ brew remove v8
 ```
 
 ```bash
-brew tap tris-foundation/tap
+brew tap tris-brew/macos
 brew install libv8
 ```
 
