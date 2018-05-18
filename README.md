@@ -70,6 +70,23 @@ swift test \
  --generate-linuxmain
 ```
 
+### Linuxbrew
+
+#### V8
+
+```bash
+brew tap tris-brew/linux
+brew install libv8
+```
+
+#### SwiftPM arguments
+
+```bash
+export LD_LIBRARY_PATH=/home/linuxbrew/.linuxbrew/lib/
+swift build -Xcc -I/home/linuxbrew/.linuxbrew/include -Xlinker -L/home/linuxbrew/.linuxbrew/lib -Xlinker -lv8_libbase -Xlinker -lv8_libplatform
+swift test -Xcc -I/home/linuxbrew/.linuxbrew/include -Xlinker -L/home/linuxbrew/.linuxbrew/lib -Xlinker -lv8_libbase -Xlinker -lv8_libplatform
+```
+
 ### Linux
 
 #### V8
