@@ -20,7 +20,7 @@ extern "C" {
 #endif
 
     // global
-    void * _Nonnull initialize();
+    void * _Nonnull initialize(const char * _Nonnull exec_path);
     void dispose(void * _Nonnull platform);
     // isolater
     void * _Nonnull createIsolate();

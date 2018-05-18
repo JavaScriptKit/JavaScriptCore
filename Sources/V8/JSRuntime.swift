@@ -11,6 +11,7 @@
 
 import CV8Platform
 import JavaScript
+import Platform
 
 @_exported import V8API
 
@@ -22,11 +23,14 @@ public class JSRuntime {
         return JSRuntime()
     }()
 
+    // The whole V8API & V8 split is caused
+    // by difference in the initialization
+    // between standalone v8 and node.js,
+    // so this way we can reuse the api
     public required init() {
-        // The whole V8API & V8 split is caused
-        // by difference in this initialization
-        // between standalone v8 and node.js
-        self.platform = initialize()
+        // used to load snapshot_blob, natives_blob, icudtl.dat
+        let libsPath = Environment["NODE_PATH"] ?? "/usr/local/lib/"
+        self.platform = initialize(libsPath)
         self.isolate = createIsolate()
     }
 
