@@ -236,8 +236,10 @@ extern "C" {
         HandleScope handle_scope(isolate);
 
         auto object = value->Get(isolate)->ToObject();
+        auto context = isolate->GetEnteredContext();
         auto key = String::NewFromUtf8(isolate, keyPtr);
-        auto result = object->GetRealNamedProperty(key);
+
+        auto result = object->GetRealNamedProperty(context, key);
 
         if (result.IsEmpty()) {
             if (exception != nullptr) {
@@ -245,6 +247,6 @@ extern "C" {
             }
             return nullptr;
         }
-        return new Global<Value>(isolate, result);
+        return new Global<Value>(isolate, result.ToLocalChecked());
     }
 }

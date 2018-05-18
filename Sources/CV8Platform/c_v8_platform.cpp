@@ -9,29 +9,17 @@
  *                                                                            *
  ******************************************************************************/
 
-#include <stdlib.h> // malloc, free
-#include <string.h> // memset, memcpy
+#include "c_v8_platform.h"
+
 #include <libplatform/libplatform.h>
 #include <v8.h>
-#include "c_v8_platform.h"
 
 using namespace v8;
 
-class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
-public:
-    virtual void *Allocate(size_t length){
-        void *data = AllocateUninitialized(length);
-        return data == NULL ? data : memset(data, 0, length);
-    }
-    virtual void *AllocateUninitialized(size_t length) { return malloc(length); }
-    virtual void Free(void *data, size_t) { free(data); }
-};
-
 extern "C" {
-    ArrayBufferAllocator bufferAllocator;
-
-    void* initialize() {
-        V8::InitializeICU();
+    void* initialize(const char *exec_path) {
+        V8::InitializeICUDefaultLocation(exec_path);
+        v8::V8::InitializeExternalStartupData(exec_path);
         auto platform = platform::CreateDefaultPlatform();
         V8::InitializePlatform(platform);
         V8::Initialize();
@@ -46,7 +34,8 @@ extern "C" {
 
     void* createIsolate() {
         Isolate::CreateParams create_params;
-        create_params.array_buffer_allocator = &bufferAllocator;
+        create_params.array_buffer_allocator =
+            v8::ArrayBuffer::Allocator::NewDefaultAllocator();
         return Isolate::New(create_params);
     }
 
