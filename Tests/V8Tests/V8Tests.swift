@@ -23,6 +23,10 @@ final class V8Tests: TestCase {
         assertThrowsError(try context.evaluate("x()")) { error in
             assertEqual("\(error)", "ReferenceError: x is not defined")
         }
+
+        assertThrowsError(try context.evaluate("{")) { error in
+            assertEqual("\(error)", "SyntaxError: Unexpected end of input")
+        }
     }
 
     func testFunction() {

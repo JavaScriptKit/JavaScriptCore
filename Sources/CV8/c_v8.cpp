@@ -92,8 +92,17 @@ extern "C" {
         Local<Context> context = globalContext->Get(isolate);
         Context::Scope context_scope(context);
         Local<String> source = String::NewFromUtf8(isolate, scriptPtr);
-        Local<Script> script = Script::Compile(source);
-        Local<Value> result = script->Run();
+        MaybeLocal<Script> maybeScript = Script::Compile(context, source);
+
+        if(maybeScript.IsEmpty()) {
+            if (exception != nullptr) {
+                *exception = new Global<Value>(isolate, trycatch.Exception());
+            }
+            return nullptr;
+        }
+
+        Local<Script> script = maybeScript.ToLocalChecked();
+        MaybeLocal<Value> result = script->Run(context);
 
         if (result.IsEmpty()) {
             if (exception != nullptr) {
@@ -101,7 +110,7 @@ extern "C" {
             }
             return nullptr;
         }
-        return new Global<Value>(isolate, result);
+        return new Global<Value>(isolate, result.ToLocalChecked());
     }
 
     void disposeValue(void* pointer) {
@@ -113,15 +122,17 @@ extern "C" {
         return scoped->ToInteger()->IntegerValue();
     }
 
-    int getUtf8StringLength(void* isolate, void* value) {
+    int getUtf8StringLength(void* isolatePtr, void* value) {
+        auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
         GlobalValue scoped(isolate, value);
-        String::Utf8Value utf8(*scoped);
+        String::Utf8Value utf8(isolate, *scoped);
         return utf8.length();
     }
 
-    void copyUtf8String(void* isolate, void* value, void* buffer, int count) {
+    void copyUtf8String(void* isolatePtr, void* value, void* buffer, int count) {
+        auto isolate = reinterpret_cast<Isolate*>(isolatePtr);
         GlobalValue scoped(isolate, value);
-        String::Utf8Value utf8(*scoped);
+        String::Utf8Value utf8(isolate, *scoped);
         memcpy(buffer, *utf8, count);
     }
 
