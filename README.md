@@ -35,15 +35,8 @@ assertEqual("\(result)", "result string")
 
 #### V8
 
-Default homebrew formula is outdated, please remove it first
-
 ```bash
-brew remove v8
-```
-
-```bash
-brew tap tris-brew/macos
-brew install libv8
+brew install v8
 ```
 
 #### JavaScriptCore
