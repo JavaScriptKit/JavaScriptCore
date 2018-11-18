@@ -15,15 +15,9 @@ import PackageDescription
 let package = Package(
     name: "JavaScript",
     products: [
-        .library(name: "JavaScript", targets: ["JavaScript"]),
-        .library(name: "V8", targets: ["V8"]),
-        .library(name: "V8API", targets: ["V8API"]),
-        .library(name: "JavaScriptCoreSwift", targets: ["JavaScriptCoreSwift"])
+        .library(name: "JavaScript", targets: ["JavaScriptCoreSwift"]),
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/tris-foundation/platform.git",
-            .branch("master")),
         .package(
             url: "https://github.com/tris-foundation/test.git",
             .branch("master"))
@@ -33,29 +27,13 @@ let package = Package(
             name: "CJavaScriptCore",
             dependencies: []),
         .target(
-            name: "CV8",
-            dependencies: []),
-        .target(
-            name: "CV8Platform",
-            dependencies: []),
-        .target(
             name: "JavaScriptCoreSwift",
             dependencies: ["CJavaScriptCore", "JavaScript"]),
-        .target(
-            name: "V8API",
-            dependencies: ["CV8", "Platform", "JavaScript"]),
-        .target(
-            name: "V8",
-            dependencies: ["CV8Platform", "V8API", "Platform", "JavaScript"]),
         .target(
             name: "JavaScript",
             dependencies: []),
         .testTarget(
-            name: "JavaScriptCoreTests",
+            name: "JavaScriptTests",
             dependencies: ["Test", "JavaScriptCoreSwift"]),
-        .testTarget(
-            name: "V8Tests",
-            dependencies: ["Test", "V8"]),
-    ],
-    cxxLanguageStandard: .cxx11
+    ]
 )
