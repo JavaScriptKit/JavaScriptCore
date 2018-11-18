@@ -10,9 +10,9 @@
  ******************************************************************************/
 
 import Test
-@testable import V8
+@testable import JavaScriptCoreSwift
 
-final class V8Tests: TestCase {
+final class JavaScriptCoreSwiftTests: TestCase {
     func testEvaluate() {
         let context = JSContext()
         assertNoThrow(try context.evaluate("40 + 2"))
@@ -21,11 +21,11 @@ final class V8Tests: TestCase {
     func testException() {
         let context = JSContext()
         assertThrowsError(try context.evaluate("x()")) { error in
-            assertEqual("\(error)", "ReferenceError: x is not defined")
+            assertEqual("\(error)", "Can't find variable: x")
         }
 
         assertThrowsError(try context.evaluate("{")) { error in
-            assertEqual("\(error)", "SyntaxError: Unexpected end of input")
+            assertEqual("\(error)", "Unexpected end of script")
         }
     }
 
