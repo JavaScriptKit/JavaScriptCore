@@ -11,6 +11,6 @@
 
 module CJavaScriptCore [system] {
     header "include.h"
-    link "javascriptcoregtk-1.0"
+    link "javascriptcoregtk-4.0"
     export *
 }

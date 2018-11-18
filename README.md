@@ -81,7 +81,7 @@ ninja -j8 -C out.gn/x64.release -v d8
 
 #### JavaScriptCore
 ```bash
-apt install -y libjavascriptcoregtk-1.0-dev
+apt install -y libjavascriptcoregtk-4.0-dev
 ```
 
 #### SwiftPM arguments
