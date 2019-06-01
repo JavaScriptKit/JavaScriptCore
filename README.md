@@ -3,7 +3,7 @@
 ## Package.swift
 
 ```swift
-.package(url: "https://github.com/tris-foundation/javascript.git", .branch("jsc"))
+.package(url: "https://github.com/JavaScriptKit/JavaScriptCore.git", .branch("master"))
 ```
 
 ## Usage
