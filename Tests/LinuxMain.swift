@@ -1,8 +1,8 @@
 import XCTest
 
-import JavaScriptTests
+import SJavaScriptCoreTests
 
 var tests = [XCTestCaseEntry]()
-tests += JavaScriptTests.__allTests()
+tests += SJavaScriptCoreTests.__allTests()
 
 XCTMain(tests)

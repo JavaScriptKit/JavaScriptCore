@@ -1,8 +1,8 @@
 
 import Test
-@testable import JavaScriptCoreSwift
+@testable import SJavaScriptCore
 
-final class JavaScriptCoreSwiftTests: TestCase {
+final class SJavaScriptCoreTests: TestCase {
     func testEvaluate() {
         let context = JSContext()
         assertNoThrow(try context.evaluate("40 + 2"))
