@@ -1,6 +1,6 @@
 
 import Test
-@testable import JavaScriptCoreSwift
+@testable import SJavaScriptCore
 
 final class JSValueTests: TestCase {
     func testIsUndefined() {

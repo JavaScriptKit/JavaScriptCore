@@ -2,11 +2,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "JavaScript",
+    name: "JavaScriptCore",
     products: [
-        .library(name: "JavaScript", targets: ["JavaScriptCoreSwift"]),
+        .library(name: "SJavaScriptCore", targets: ["SJavaScriptCore"]),
     ],
     dependencies: [
+        .package(
+            url: "https://github.com/tris-code/javascript.git",
+            .branch("master")),
         .package(
             url: "https://github.com/tris-code/test.git",
             .branch("master"))
@@ -16,13 +19,10 @@ let package = Package(
             name: "CJavaScriptCore",
             dependencies: []),
         .target(
-            name: "JavaScriptCoreSwift",
+            name: "SJavaScriptCore",
             dependencies: ["CJavaScriptCore", "JavaScript"]),
-        .target(
-            name: "JavaScript",
-            dependencies: []),
         .testTarget(
-            name: "JavaScriptTests",
-            dependencies: ["Test", "JavaScriptCoreSwift"]),
+            name: "SJavaScriptCoreTests",
+            dependencies: ["Test", "SJavaScriptCore"]),
     ]
 )
