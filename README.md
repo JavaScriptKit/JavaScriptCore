@@ -3,7 +3,7 @@
 ## Package.swift
 
 ```swift
-.package(url: "https://github.com/JavaScriptKit/JavaScriptCore.git", .branch("master"))
+.package(url: "https://github.com/JavaScriptKit/JavaScriptCore.git", .branch("dev"))
 ```
 
 ## Usage
@@ -16,9 +16,9 @@ try context.createFunction(name: "getResult") {
     return .string("result string")
 }
 let result = try context.evaluate("getResult()")
-assertTrue(result.isString)
-assertEqual(try result.toString(), "result string")
-assertEqual("\(result)", "result string")
+expect(result.isString)
+expect(try result.toString() == "result string")
+expect("\(result)" == "result string")
 ```
 
 ## Requirements
