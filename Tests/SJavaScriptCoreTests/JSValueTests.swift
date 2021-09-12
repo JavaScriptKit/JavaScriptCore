@@ -8,12 +8,12 @@ final class JSValueTests: TestCase {
             let context = JSContext()
 
             let result = try context.evaluate("undefined")
-            assertTrue(result.isUndefined)
-            assertFalse(result.isNull)
-            assertFalse(result.isBool)
-            assertFalse(result.isNumber)
-            assertFalse(result.isString)
-            assertEqual(try result.toString(), "undefined")
+            expect(result.isUndefined)
+            expect(!result.isNull)
+            expect(!result.isBool)
+            expect(!result.isNumber)
+            expect(!result.isString)
+            expect(try result.toString() == "undefined")
         } catch {
             fail(String(describing: error))
         }
@@ -23,12 +23,12 @@ final class JSValueTests: TestCase {
         do {
             let context = JSContext()
             let result = try context.evaluate("null")
-            assertFalse(result.isUndefined)
-            assertTrue(result.isNull)
-            assertFalse(result.isBool)
-            assertFalse(result.isNumber)
-            assertFalse(result.isString)
-            assertEqual(try result.toString(), "null")
+            expect(!result.isUndefined)
+            expect(result.isNull)
+            expect(!result.isBool)
+            expect(!result.isNumber)
+            expect(!result.isString)
+            expect(try result.toString() == "null")
         } catch {
             fail(String(describing: error))
         }
@@ -38,13 +38,13 @@ final class JSValueTests: TestCase {
         do {
             let context = JSContext()
             let result = try context.evaluate("true")
-            assertFalse(result.isUndefined)
-            assertFalse(result.isNull)
-            assertTrue(result.isBool)
-            assertFalse(result.isNumber)
-            assertFalse(result.isString)
-            assertEqual(try result.toString(), "true")
-            assertEqual(result.toBool(), true)
+            expect(!result.isUndefined)
+            expect(!result.isNull)
+            expect(result.isBool)
+            expect(!result.isNumber)
+            expect(!result.isString)
+            expect(try result.toString() == "true")
+            expect(result.toBool() == true)
         } catch {
             fail(String(describing: error))
         }
@@ -54,13 +54,13 @@ final class JSValueTests: TestCase {
         do {
             let context = JSContext()
             let result = try context.evaluate("3.14")
-            assertFalse(result.isUndefined)
-            assertFalse(result.isNull)
-            assertFalse(result.isBool)
-            assertTrue(result.isNumber)
-            assertFalse(result.isString)
-            assertEqual(try result.toString(), "3.14")
-            assertEqual(try result.toDouble(), 3.14)
+            expect(!result.isUndefined)
+            expect(!result.isNull)
+            expect(!result.isBool)
+            expect(result.isNumber)
+            expect(!result.isString)
+            expect(try result.toString() == "3.14")
+            expect(try result.toDouble() == 3.14)
         } catch {
             fail(String(describing: error))
         }
@@ -70,12 +70,12 @@ final class JSValueTests: TestCase {
         do {
             let context = JSContext()
             let result = try context.evaluate("'success'")
-            assertFalse(result.isUndefined)
-            assertFalse(result.isNull)
-            assertFalse(result.isBool)
-            assertFalse(result.isNumber)
-            assertTrue(result.isString)
-            assertEqual(try result.toString(), "success")
+            expect(!result.isUndefined)
+            expect(!result.isNull)
+            expect(!result.isBool)
+            expect(!result.isNumber)
+            expect(result.isString)
+            expect(try result.toString() == "success")
         } catch {
             fail(String(describing: error))
         }
@@ -85,7 +85,7 @@ final class JSValueTests: TestCase {
         do {
             let context = JSContext()
             let result = try context.evaluate("40 + 2")
-            assertEqual(try result.toInt(), 42)
+            expect(try result.toInt() == 42)
         } catch {
             fail(String(describing: error))
         }
@@ -95,7 +95,7 @@ final class JSValueTests: TestCase {
         do {
             let context = JSContext()
             let result = try context.evaluate("40 + 2")
-            assertEqual(try result.toString(), "42")
+            expect(try result.toString() == "42")
         } catch {
             fail(String(describing: error))
         }
@@ -110,7 +110,7 @@ final class JSValueTests: TestCase {
                 })()
                 """)
 
-            assertEqual(try result["property"]?.toString(), "test")
+            expect(try result["property"]?.toString() == "test")
         } catch {
             fail(String(describing: error))
         }

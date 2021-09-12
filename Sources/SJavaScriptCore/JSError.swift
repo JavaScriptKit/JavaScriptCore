@@ -5,7 +5,7 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
-public struct JSError: Error, CustomStringConvertible {
+public struct JSError: Error, Equatable, CustomStringConvertible {
     public var description: String
 
     init(context: JSContextRef, pointer: JSValueRef) {
@@ -23,5 +23,10 @@ public struct JSError: Error, CustomStringConvertible {
         } catch {
             self.description = "failed to convert JSError"
         }
+    }
+
+    // @testable
+    init(_ description: String) {
+        self.description = description
     }
 }
