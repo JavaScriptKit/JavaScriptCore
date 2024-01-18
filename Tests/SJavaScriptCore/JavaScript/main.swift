@@ -1,12 +1,12 @@
 import Test
 @testable import SJavaScriptCore
 
-test.case("evaluate") {
+test("evaluate") {
     let context = JSContext()
     _ = try context.evaluate("40 + 2")
 }
 
-test.case("exception") {
+test("exception") {
     let context = JSContext()
     expect(throws: JSError("Can't find variable: x")) {
         try context.evaluate("x()")
@@ -17,7 +17,7 @@ test.case("exception") {
     }
 }
 
-test.case("function") {
+test("function") {
     let context = JSContext()
     try context.createFunction(name: "test") { (_) -> Value in
         return .string("success")
@@ -26,7 +26,7 @@ test.case("function") {
     expect(try result.toString() == "success")
 }
 
-test.case("closure") {
+test("closure") {
     let context = JSContext()
 
     try context.createFunction(name: "testUndefined") {
@@ -60,7 +60,7 @@ test.case("closure") {
     expect(stringResult.isString)
 }
 
-test.case("capture") {
+test("capture") {
     let context = JSContext()
 
     var captured = false
@@ -73,7 +73,7 @@ test.case("capture") {
     expect("\(result)" == "captured")
 }
 
-test.case("arguments") {
+test("arguments") {
     let context = JSContext()
     try context.createFunction(name: "test") { (arguments) -> Void in
         expect(arguments.count == 2)
@@ -83,7 +83,7 @@ test.case("arguments") {
     try context.evaluate("test('one', 42)")
 }
 
-test.case("persistent context") {
+test("persistent context") {
     let context = JSContext()
     try context.evaluate("result = 'success'")
     expect(try context.evaluate("result").toString() == "success")
@@ -95,7 +95,7 @@ test.case("persistent context") {
     expect(try context.evaluate("result").toString() == "success")
 }
 
-test.case("sandbox") {
+test("sandbox") {
     try {
         let context = JSContext()
         try context.evaluate("test = 'hello'")
@@ -109,4 +109,4 @@ test.case("sandbox") {
     }
 }
 
-test.run()
+await run()
