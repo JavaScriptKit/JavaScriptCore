@@ -1,4 +1,3 @@
-
 #if os(Linux)
 import CJavaScriptCore
 #else

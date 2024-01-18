@@ -88,7 +88,7 @@ test("persistent context") {
     try context.evaluate("result = 'success'")
     expect(try context.evaluate("result").toString() == "success")
 
-    try context.createFunction(name: "test") { (arguments) -> Value in
+    try context.createFunction(name: "test") { (_) -> Value in
         return .string("test ok")
     }
 

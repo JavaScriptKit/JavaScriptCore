@@ -1,4 +1,3 @@
-
 #if os(Linux)
 import CJavaScriptCore
 #else
@@ -79,7 +78,7 @@ extension JSValue {
         let property = JSStringCreateWithCharacters(bytes, bytes.count)
         defer { JSStringRelease(property) }
 
-        var exception: JSValueRef? = nil
+        var exception: JSValueRef?
         let result = JSObjectGetProperty(context, pointer, property, &exception)
 
         if exception != nil {
@@ -88,7 +87,6 @@ extension JSValue {
         return JSValue(context: context, pointer: result!)
     }
 }
-
 
 extension JSValue {
     public var isNull: Bool {
