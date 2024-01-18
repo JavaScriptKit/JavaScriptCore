@@ -18,15 +18,26 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CJavaScriptCore"),
+            name: "CJavaScriptCore",
+            swiftSettings: swift6),
         .target(
             name: "SJavaScriptCore",
             dependencies: [
                 .target(name: "CJavaScriptCore"),
                 .product(name: "JavaScript", package: "javascript"),
-            ])
+            ],
+            swiftSettings: swift6)
     ]
 )
+
+let swift6: [SwiftSetting] = [
+    .enableUpcomingFeature("ConciseMagicFile"),
+    .enableUpcomingFeature("ForwardTrailingClosures"),
+    .enableUpcomingFeature("ExistentialAny"),
+    .enableUpcomingFeature("StrictConcurrency"),
+    .enableUpcomingFeature("ImplicitOpenExistentials"),
+    .enableUpcomingFeature("BareSlashRegexLiterals"),
+]
 
 // MARK: - tests
 
@@ -47,7 +58,8 @@ func addTest(target: String, name: String) {
                 .target(name: "SJavaScriptCore"),
                 .product(name: "Test", package: "test"),
             ],
-            path: "Tests/\(target)/\(name)"))
+            path: "Tests/\(target)/\(name)",
+            swiftSettings: swift6))
 }
 
 // MARK: - custom package source
