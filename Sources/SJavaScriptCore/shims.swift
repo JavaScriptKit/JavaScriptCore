@@ -1,4 +1,3 @@
-
 #if os(Linux)
 import CJavaScriptCore
 #else
@@ -9,7 +8,7 @@ public func JSValueToStringCopy(
     _ ctx: JSContextRef,
     _ value: JSValueRef
 ) throws -> JSStringRef {
-    var exception: JSValueRef? = nil
+    var exception: JSValueRef?
     let result = JSValueToStringCopy(ctx, value, &exception)
     if let exception = exception {
         throw JSError(context: ctx, pointer: exception)
@@ -21,7 +20,7 @@ public func JSValueToNumber(
     _ ctx: JSContextRef,
     _ value: JSValueRef
 ) throws -> Double {
-    var exception: JSValueRef? = nil
+    var exception: JSValueRef?
     let result = JSValueToNumber(ctx, value, &exception)
     if let exception = exception {
         throw JSError(context: ctx, pointer: exception)
@@ -37,7 +36,7 @@ public func JSEvaluateScript(
     _ sourceURL: JSStringRef!,
     _ startingLineNumber: Int32
 ) throws -> JSValueRef {
-    var exception: JSValueRef? = nil
+    var exception: JSValueRef?
     let result = JSEvaluateScript(
         ctx, script, thisObject, sourceURL, startingLineNumber, &exception)
     if let exception = exception {
@@ -55,13 +54,18 @@ public struct JSPropertyAttributes: OptionSet {
     }
 
     /// Specifies that a property has no special attributes.
-    static let none = JSPropertyAttributes(rawValue: UInt32(kJSPropertyAttributeNone))
+    static let none = JSPropertyAttributes(
+        rawValue: UInt32(kJSPropertyAttributeNone))
     /// Specifies that a property is read-only.
-    static let readOnly = JSPropertyAttributes(rawValue: UInt32(kJSPropertyAttributeNone))
-    /// Specifies that a property should not be enumerated by JSPropertyEnumerators and JavaScript for...in loops.
-    static let dontEnum = JSPropertyAttributes(rawValue: UInt32(kJSPropertyAttributeNone))
+    static let readOnly = JSPropertyAttributes(
+        rawValue: UInt32(kJSPropertyAttributeNone))
+    /// Specifies that a property should not be enumerated by
+    /// JSPropertyEnumerators and JavaScript for...in loops.
+    static let dontEnum = JSPropertyAttributes(
+        rawValue: UInt32(kJSPropertyAttributeNone))
     /// Specifies that the delete operation should fail on a property.
-    static let dontDelete = JSPropertyAttributes(rawValue: UInt32(kJSPropertyAttributeNone))
+    static let dontDelete = JSPropertyAttributes(
+        rawValue: UInt32(kJSPropertyAttributeNone))
 }
 
 public func JSObjectSetProperty(
@@ -71,7 +75,7 @@ public func JSObjectSetProperty(
     _ value: JSValueRef!,
     _ attributes: JSPropertyAttributes
 ) throws {
-    var exception: JSValueRef? = nil
+    var exception: JSValueRef?
     JSObjectSetProperty(
         ctx, object, propertyName, value, attributes.rawValue, &exception)
     if let exception = exception {

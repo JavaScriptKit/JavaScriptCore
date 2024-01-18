@@ -1,4 +1,3 @@
-
 #if os(Linux)
 import CJavaScriptCore
 #else
@@ -12,16 +11,16 @@ private var functions: [OpaquePointer: ([JSValue]) throws -> Value] = [:]
 extension JSContext {
     public func createFunction(
         name: String,
-        _ body: @escaping ([JSValue]) throws -> Value) throws
-    {
+        _ body: @escaping ([JSValue]) throws -> Value
+    ) throws {
         let function = try createFunction(name: name, callback: wrapper)
         functions[function] = body
     }
 
     public func createFunction(
         name: String,
-        _ body: @escaping ([JSValue]) throws -> Void) throws
-    {
+        _ body: @escaping ([JSValue]) throws -> Void
+    ) throws {
         let function = try createFunction(name: name, callback: wrapper)
         functions[function] = { arguments in
             try body(arguments)
@@ -33,8 +32,8 @@ extension JSContext {
 extension JSContext {
     public func createFunction(
         name: String,
-        _ body: @escaping () throws -> Value) throws
-    {
+        _ body: @escaping () throws -> Value
+    ) throws {
         return try createFunction(name: name) { _ in
             return try body()
         }
@@ -42,8 +41,8 @@ extension JSContext {
 
     public func createFunction(
         name: String,
-        _ body: @escaping () throws -> Void) throws
-    {
+        _ body: @escaping () throws -> Void
+    ) throws {
         try createFunction(name: name) { _ in
             try body()
         }
@@ -56,8 +55,8 @@ func wrapper(
     thisObject: JSObjectRef!,
     argumentCount: Int,
     arguments: UnsafePointer<JSValueRef?>?,
-    exception: UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef?
-{
+    exception: UnsafeMutablePointer<JSValueRef?>?
+) -> JSValueRef? {
     guard let body = functions[function] else {
         if let exception = exception {
             let error = "swift error: unregistered function"

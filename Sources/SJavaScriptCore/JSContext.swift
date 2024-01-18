@@ -1,4 +1,3 @@
-
 #if os(Linux)
 import CJavaScriptCore
 #else
@@ -8,7 +7,7 @@ import JavaScriptCore
 public class JSContext {
     let group: JSContextGroupRef
     let context: JSGlobalContextRef
-    var exception: JSObjectRef? = nil
+    var exception: JSObjectRef?
 
     var global: JSObjectRef {
         return JSContextGetGlobalObject(context)!
