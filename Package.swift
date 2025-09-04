@@ -14,7 +14,6 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "JavaScript"),
-        .package(name: "Test"),
     ],
     targets: [
         .target(
@@ -26,7 +25,13 @@ let package = Package(
                 .target(name: "CJavaScriptCore"),
                 .product(name: "JavaScript", package: "javascript"),
             ],
-            swiftSettings: swift6)
+            swiftSettings: swift6),
+        .testTarget(
+            name: "Tests",
+            dependencies: [
+                "SJavaScriptCore"
+            ]
+        )
     ]
 )
 
@@ -38,29 +43,6 @@ let swift6: [SwiftSetting] = [
     .enableUpcomingFeature("ImplicitOpenExistentials"),
     .enableUpcomingFeature("BareSlashRegexLiterals"),
 ]
-
-// MARK: - tests
-
-testTarget("SJavaScriptCore") { test in
-    test("JavaScript")
-    test("JSValue")
-}
-
-func testTarget(_ target: String, task: ((String) -> Void) -> Void) {
-    task { test in addTest(target: target, name: test) }
-}
-
-func addTest(target: String, name: String) {
-    package.targets.append(
-        .executableTarget(
-            name: "Tests/\(target)/\(name)",
-            dependencies: [
-                .target(name: "SJavaScriptCore"),
-                .product(name: "Test", package: "test"),
-            ],
-            path: "Tests/\(target)/\(name)",
-            swiftSettings: swift6))
-}
 
 // MARK: - custom package source
 

@@ -1,66 +1,66 @@
-import Test
+import Testing
 @testable import SJavaScriptCore
 
-test("evaluate") {
+@Test func evaluate() async throws {
     let context = JSContext()
     _ = try context.evaluate("40 + 2")
 }
 
-test("exception") {
+@Test func exception() async throws {
     let context = JSContext()
-    expect(throws: JSError("Can't find variable: x")) {
+    #expect(throws: JSError("Can't find variable: x")) {
         try context.evaluate("x()")
     }
 
-    expect(throws: JSError("Unexpected end of script")) {
+    #expect(throws: JSError("Unexpected end of script")) {
         try context.evaluate("{")
     }
 }
 
-test("function") {
+@Test func function() async throws {
     let context = JSContext()
     try context.createFunction(name: "test") { (_) -> Value in
         return .string("success")
     }
     let result = try context.evaluate("test()")
-    expect(try result.toString() == "success")
+    #expect(try result.toString() == "success")
 }
 
-test("closure") {
+@Test func closure() async throws {
     let context = JSContext()
 
     try context.createFunction(name: "testUndefined") {
         return .undefined
     }
     let undefinedResult = try context.evaluate("testUndefined()")
-    expect(undefinedResult.isUndefined)
+    #expect(undefinedResult.isUndefined)
 
     try context.createFunction(name: "testNull") {
         return .null
     }
     let nullResult = try context.evaluate("testNull()")
-    expect(nullResult.isNull)
+    #expect(nullResult.isNull)
 
     try context.createFunction(name: "testBool") {
         return .bool(true)
     }
     let boolResult = try context.evaluate("testBool()")
-    expect(boolResult.isBool)
+    #expect(boolResult.isBool)
 
     try context.createFunction(name: "testNumber") {
         return .number(3.14)
     }
     let numberResult = try context.evaluate("testNumber()")
-    expect(numberResult.isNumber)
+    #expect(numberResult.isNumber)
 
     try context.createFunction(name: "testString") {
         return .string("success")
     }
     let stringResult = try context.evaluate("testString()")
-    expect(stringResult.isString)
+    #expect(stringResult.isString)
 }
 
-test("capture") {
+@Test func capture() async throws {
     let context = JSContext()
 
     var captured = false
@@ -69,44 +69,42 @@ test("capture") {
         return .string("captured")
     }
     let result = try context.evaluate("test()")
-    expect(captured)
-    expect("\(result)" == "captured")
+    #expect(captured)
+    #expect("\(result)" == "captured")
 }
 
-test("arguments") {
+@Test func arguments() async throws {
     let context = JSContext()
     try context.createFunction(name: "test") { (arguments) -> Void in
-        expect(arguments.count == 2)
-        expect(try arguments.first?.toString() == "one")
-        expect(try arguments.last?.toInt() == 42)
+        #expect(arguments.count == 2)
+        try #expect(arguments.first?.toString() == "one")
+        try #expect(arguments.last?.toInt() == 42)
     }
     try context.evaluate("test('one', 42)")
 }
 
-test("persistent context") {
+@Test func `persistent context`() async throws {
     let context = JSContext()
     try context.evaluate("result = 'success'")
-    expect(try context.evaluate("result").toString() == "success")
+    #expect(try context.evaluate("result").toString() == "success")
 
     try context.createFunction(name: "test") { (_) -> Value in
         return .string("test ok")
     }
 
-    expect(try context.evaluate("result").toString() == "success")
+    #expect(try context.evaluate("result").toString() == "success")
 }
 
-test("sandbox") {
+@Test func sandbox() async throws {
     try {
         let context = JSContext()
         try context.evaluate("test = 'hello'")
         let result = try context.evaluate("test")
-        expect(try result.toString() == "hello")
+        #expect(try result.toString() == "hello")
     }()
 
     let context = JSContext()
-    expect(throws: JSError("Can\'t find variable: test")) {
+    #expect(throws: JSError("Can\'t find variable: test")) {
         try context.evaluate("test")
     }
 }
-
-await run()
