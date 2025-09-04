@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 import PackageDescription
 
 let package = Package(
     name: "JavaScriptCore",
     platforms: [
-        .iOS(.v16),
-        .macOS(.v13),
+        .iOS(.v18),
+        .macOS(.v15),
     ],
     products: [
         .library(
@@ -17,15 +17,13 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CJavaScriptCore",
-            swiftSettings: swift6),
+            name: "CJavaScriptCore"),
         .target(
             name: "SJavaScriptCore",
             dependencies: [
                 .target(name: "CJavaScriptCore"),
                 .product(name: "JavaScript", package: "javascript"),
-            ],
-            swiftSettings: swift6),
+            ]),
         .testTarget(
             name: "Tests",
             dependencies: [
@@ -34,15 +32,6 @@ let package = Package(
         )
     ]
 )
-
-let swift6: [SwiftSetting] = [
-    .enableUpcomingFeature("ConciseMagicFile"),
-    .enableUpcomingFeature("ForwardTrailingClosures"),
-    .enableUpcomingFeature("ExistentialAny"),
-    .enableUpcomingFeature("StrictConcurrency"),
-    .enableUpcomingFeature("ImplicitOpenExistentials"),
-    .enableUpcomingFeature("BareSlashRegexLiterals"),
-]
 
 // MARK: - custom package source
 

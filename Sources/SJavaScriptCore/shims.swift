@@ -46,7 +46,7 @@ public func JSEvaluateScript(
     return result!
 }
 
-public struct JSPropertyAttributes: OptionSet {
+public struct JSPropertyAttributes: OptionSet, Sendable {
     public let rawValue: UInt32
 
     public init(rawValue: UInt32) {

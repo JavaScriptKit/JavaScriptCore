@@ -4,27 +4,34 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
+import Synchronization
+
 @_exported import JavaScript
 
-private var functions: [OpaquePointer: ([JSValue]) throws -> Value] = [:]
+private
+let functions: Mutex<[OpaquePointer: ([JSValue]) throws -> Value]> = .init([:])
+
+extension JSObjectRef: @unchecked @retroactive Sendable {}
 
 extension JSContext {
     public func createFunction(
         name: String,
-        _ body: @escaping ([JSValue]) throws -> Value
+        _ body: @escaping @Sendable ([JSValue]) throws -> Value
     ) throws {
         let function = try createFunction(name: name, callback: wrapper)
-        functions[function] = body
+        functions.withLock { $0[function] = body }
     }
 
     public func createFunction(
         name: String,
-        _ body: @escaping ([JSValue]) throws -> Void
+        _ body: @escaping @Sendable ([JSValue]) throws -> Void
     ) throws {
         let function = try createFunction(name: name, callback: wrapper)
-        functions[function] = { arguments in
-            try body(arguments)
-            return .undefined
+        functions.withLock {
+            $0[function] = { arguments in
+                try body(arguments)
+                return .undefined
+            }
         }
     }
 }
@@ -32,7 +39,7 @@ extension JSContext {
 extension JSContext {
     public func createFunction(
         name: String,
-        _ body: @escaping () throws -> Value
+        _ body: @escaping @Sendable () throws -> Value
     ) throws {
         return try createFunction(name: name) { _ in
             return try body()
@@ -41,7 +48,7 @@ extension JSContext {
 
     public func createFunction(
         name: String,
-        _ body: @escaping () throws -> Void
+        _ body: @escaping @Sendable () throws -> Void
     ) throws {
         try createFunction(name: name) { _ in
             try body()
@@ -57,7 +64,7 @@ func wrapper(
     arguments: UnsafePointer<JSValueRef?>?,
     exception: UnsafeMutablePointer<JSValueRef?>?
 ) -> JSValueRef? {
-    guard let body = functions[function] else {
+    guard let body = functions.withLock({ $0[function] }) else {
         if let exception = exception {
             let error = "swift error: unregistered function"
             exception.pointee = JSValue(string: error, in: ctx).pointer
