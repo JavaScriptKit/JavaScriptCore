@@ -60,19 +60,20 @@ import Testing
     #expect(stringResult.isString)
 }
 
-// FIXME: or remove
-//@Test func capture() async throws {
-//    let context = JSContext()
-//
-//    var captured = false
-//    try context.createFunction(name: "test") { (_) -> Value in
-//        captured = true
-//        return .string("captured")
-//    }
-//    let result = try context.evaluate("test()")
-//    #expect(captured)
-//    #expect("\(result)" == "captured")
-//}
+@Test func capture() async throws {
+    let context = JSContext()
+    final class Box: @unchecked Sendable {
+        var captured = false
+    }
+    let box = Box()
+    try context.createFunction(name: "test") { (_) -> Value in
+        box.captured = true
+        return .string("captured")
+    }
+    let result = try context.evaluate("test()")
+    #expect(box.captured == true)
+    #expect("\(result)" == "captured")
+}
 
 @Test func arguments() async throws {
     let context = JSContext()
