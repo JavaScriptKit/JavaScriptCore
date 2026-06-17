@@ -30,7 +30,5 @@ Just works
 ### Linux
 
 ```bash
-apt install -y libjavascriptcoregtk-4.0-dev
-swift build -Xcc -I/usr/include/webkitgtk-4.0
-swift test -Xcc -I/usr/include/webkitgtk-4.0
+apt install -y libjavascriptcoregtk-4.1-dev
 ```
