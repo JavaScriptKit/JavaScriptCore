@@ -9,20 +9,32 @@ let package = Package(
     products: [
         .library(
             name: "SJavaScriptCore",
-            targets: ["SJavaScriptCore"]),
+            targets: ["SJavaScriptCore"]
+        ),
     ],
     dependencies: [
         .package(name: "JavaScript"),
     ],
     targets: [
         .target(
-            name: "CJavaScriptCore"),
-        .target(
             name: "SJavaScriptCore",
             dependencies: [
-                .target(name: "CJavaScriptCore"),
-                .product(name: "JavaScript", package: "javascript"),
-            ]),
+                .target(
+                    name: "CJavaScriptCore",
+                    condition: .when(platforms: [.linux])
+                ),
+                .product(
+                    name: "JavaScript",
+                    package: "javascript"
+                ),
+            ],
+            path: "./Sources/JavaScriptCore"
+        ),
+        .systemLibrary(
+            name: "CJavaScriptCore",
+            pkgConfig: "javascriptcoregtk-4.1",
+            providers: [.aptItem(["libjavascriptcoregtk-4.1-dev"])]
+        ),
         .testTarget(
             name: "Tests",
             dependencies: [

@@ -1,6 +1,0 @@
-
-module CJavaScriptCore [system] {
-    header "include.h"
-    link "javascriptcoregtk-4.0"
-    export *
-}
