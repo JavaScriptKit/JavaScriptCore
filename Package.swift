@@ -1,11 +1,10 @@
-// swift-tools-version:6.0
+// swift-tools-version:6.4
 import PackageDescription
 
 let package = Package(
     name: "JavaScriptCore",
     platforms: [
-        .iOS(.v18),
-        .macOS(.v15),
+        .macOS(.v26),
     ],
     products: [
         .library(
